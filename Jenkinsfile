@@ -11,7 +11,6 @@ pipeline {
         stage('Build & Run Docker') {
             steps {
                 script {
-                    bat 'docker-compose -f %COMPOSE_FILE% down -v --remove-orphans || exit 0'
                     bat 'docker-compose down -v --remove-orphans && docker-compose up --build'
                 }
             }
