@@ -10,9 +10,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'docker-compose -f $COMPOSE_FILE down || true'
+                        sh 'docker-compose -f $COMPOSE_FILE down -v --remove-orphans|| true'
                     } else {
-                        bat 'docker-compose -f %COMPOSE_FILE% down || exit 0'
+                        bat 'docker-compose -f %COMPOSE_FILE% down -v --remove-orphans|| exit 0'
                     }
                 }
             }
@@ -47,9 +47,9 @@ pipeline {
         always {
             script {
                 if (isUnix()) {
-                    sh 'docker-compose down'
+                    sh 'docker-compose down -v --remove-orphans'
                 } else {
-                    bat 'docker-compose down'
+                    bat 'docker-compose down -v --remove-orphans'
                 }
             }
         }
