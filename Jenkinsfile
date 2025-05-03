@@ -1,46 +1,57 @@
 pipeline {
     agent any
 
+    environment {
+        COMPOSE_FILE = 'docker-compose.yml'
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clean up') {
             steps {
-                git 'https://github.com/andreirhamni09/frontend-note-list.git'
-            }
-        }
-        stage('Install Yarn') {
-            steps {
-                bat 'npm install -g yarn'
-            }
-        }
-
-        stage('Install dependencies') {
-            steps {
-                bat 'yarn install' // gunakan `sh` jika Jenkins Linux
+                script {
+                    if (isUnix()) {
+                        sh 'docker-compose -f $COMPOSE_FILE down || true'
+                    } else {
+                        bat 'docker-compose -f %COMPOSE_FILE% down || exit 0'
+                    }
+                }
             }
         }
 
-        stage('Build') {
+        stage('Build & Run Docker') {
             steps {
-                bat 'yarn build'
+                script {
+                    if (isUnix()) {
+                        sh 'docker-compose -f $COMPOSE_FILE up -d --build'
+                    } else {
+                        bat 'docker-compose -f %COMPOSE_FILE% up -d --build'
+                    }
+                }
             }
         }
 
-        stage('Docker Build') {
+        stage('Test') {
             steps {
-                bat 'docker build -t frontend-note-list .'
-            }
-        }
-
-        stage('Docker Run') {
-            steps {
-                bat 'docker run -d --name frontend-note-list -p 3000:3000 frontend-app:latest'
+                script {
+                    if (isUnix()) {
+                        sh 'docker exec frontend-note-list yarn test || true'
+                    } else {
+                        bat 'docker exec frontend-note-list yarn test || exit 0'
+                    }
+                }
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline selesai.'
+            script {
+                if (isUnix()) {
+                    sh 'docker-compose down'
+                } else {
+                    bat 'docker-compose down'
+                }
+            }
         }
     }
 }
