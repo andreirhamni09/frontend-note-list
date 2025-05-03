@@ -12,6 +12,11 @@ pipeline {
                 git 'https://github.com/andreirhamni09/frontend-note-list.git'
             }
         }
+        stage('Install Yarn') {
+            steps {
+                bat 'npm install -g yarn'
+            }
+        }
 
         stage('Install dependencies') {
             steps {
