@@ -9,12 +9,7 @@ pipeline {
         stage('Clean up') {
             steps {
                 script {
-                    // TESTING WEBHOOK
-                    if (isUnix()) {
-                        sh 'docker-compose -f $COMPOSE_FILE down -v --remove-orphans|| true'
-                    } else {
-                        bat 'docker-compose -f %COMPOSE_FILE% down -v --remove-orphans|| exit 0'
-                    }
+                    bat 'docker-compose -f %COMPOSE_FILE% down -v --remove-orphans || exit 0'
                 }
             }
         }
@@ -22,37 +17,36 @@ pipeline {
         stage('Build & Run Docker') {
             steps {
                 script {
-                    if (isUnix()) {
-                        sh 'docker-compose -f $COMPOSE_FILE up -d --build'
-                    } else {
-                        bat 'docker-compose -f %COMPOSE_FILE% up -d --build'
-                    }
+                    bat 'docker-compose -f %COMPOSE_FILE% up -d --build'
                 }
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                bat '''
+                echo Menunggu frontend siap...
+                for /l %%x in (1,1,30) do (
+                    curl -s http://localhost:3000 >nul && goto ready
+                    echo Masih menunggu...
+                    timeout /t 2 >nul
+                )
+                :ready
+                echo Frontend siap!
+                '''
             }
         }
 
         stage('Test') {
             steps {
-                script {
-                    if (isUnix()) {
-                        sh 'docker exec frontend-note-list yarn test || true'
-                    } else {
-                        bat 'docker exec frontend-note-list yarn test || exit 0'
-                    }
-                }
+                bat 'docker exec frontend-note-list yarn test || exit 0'
             }
         }
     }
 
     post {
         always {
-            script {
-                if (isUnix()) {
-                    sh 'docker-compose down -v --remove-orphans'
-                } else {
-                    bat 'docker-compose down -v --remove-orphans'
-                }
-            }
+            bat 'docker-compose down -v --remove-orphans'
         }
     }
 }
