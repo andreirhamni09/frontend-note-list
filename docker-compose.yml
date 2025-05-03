@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: frontend-image
     container_name: frontend-note-list
     ports:
       - "3000:3000"
