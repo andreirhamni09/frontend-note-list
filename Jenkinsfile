@@ -1,11 +1,6 @@
 pipeline {
     agent any
-
-    environment {
-        IMAGE_NAME = 'frontend-note-list'
-        CONTAINER_NAME = 'frontend-note-list'
-    }
-
+    
     stages {
         stage('Checkout') {
             steps {
@@ -32,14 +27,14 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat 'docker build -t %IMAGE_NAME% .'
+                bat 'docker-compose down -v --remove-orphans'
+                bat 'docker-compose up --build --force-recreate'
             }
         }
 
         stage('Docker Run') {
             steps {
-                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
-                bat 'docker run -d --name %CONTAINER_NAME% -p 3000:3000 %IMAGE_NAME%'
+                bat 'docker run -d --name frontend-note-list -p 3000:3000 frontend-app:latest'
             }
         }
     }
