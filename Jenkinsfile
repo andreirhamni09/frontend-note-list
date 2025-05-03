@@ -6,18 +6,12 @@ pipeline {
     }
 
     stages {
-        stage('Clean up') {
-            steps {
-                script {
-                    bat 'docker-compose -f %COMPOSE_FILE% down -v --remove-orphans || exit 0'
-                }
-            }
-        }
 
         stage('Build & Run Docker') {
             steps {
                 script {
-                    bat 'docker-compose -f %COMPOSE_FILE% up -d --build'
+                    bat 'docker-compose down -v --remove-orphans'
+                    bat 'docker-compose up --build'
                 }
             }
         }
@@ -44,9 +38,9 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            bat 'docker-compose down -v --remove-orphans'
-        }
-    }
+    // post {
+    //     always {
+    //         bat 'docker-compose down -v --remove-orphans'
+    //     }
+    // }
 }
