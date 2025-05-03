@@ -9,6 +9,7 @@ pipeline {
         stage('Clean up') {
             steps {
                 script {
+                    // TESTING WEBHOOK
                     if (isUnix()) {
                         sh 'docker-compose -f $COMPOSE_FILE down -v --remove-orphans|| true'
                     } else {
