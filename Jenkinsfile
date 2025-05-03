@@ -1,35 +1,47 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    COMPOSE_FILE = 'docker-compose.yml'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        git 'https://github.com/andreirhamni09/frontend-note-list.git'
-      }
+    environment {
+        IMAGE_NAME = 'frontend-note-list'
+        CONTAINER_NAME = 'frontend-note-list'
     }
 
-    stage('Build Frontend') {
-      steps {
-        dir('frontend') {
-          bat 'docker build -t frontend-note-list-app .'
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/andreirhamni09/frontend-note-list.git'
+            }
         }
-      }
+
+        stage('Install dependencies') {
+            steps {
+                bat 'yarn install' // gunakan `sh` jika Jenkins Linux
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'yarn build'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME% .'
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+                bat 'docker run -d --name %CONTAINER_NAME% -p 3000:3000 %IMAGE_NAME%'
+            }
+        }
     }
 
-    stage('Run Docker Compose') {
-      steps {
-        bat 'docker-compose -f $COMPOSE_FILE up -d --build'
-      }
+    post {
+        always {
+            echo 'Pipeline selesai.'
+        }
     }
-  }
-
-  post {
-    always {
-      bat 'docker-compose -f $COMPOSE_FILE down'
-    }
-  }
 }
