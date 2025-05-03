@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -27,8 +27,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat 'docker-compose down -v --remove-orphans'
-                bat 'docker-compose up --build --force-recreate'
+                bat 'docker build -t frontend-note-list .'
             }
         }
 

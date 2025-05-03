@@ -1,7 +1,4 @@
-# frontend/Dockerfile
-
-# Stage 1: Build
-FROM node:18-alpine as builder
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -12,7 +9,6 @@ COPY . .
 RUN yarn build
 
 # Stage 2: Serve
-FROM node:18-alpine
 
 WORKDIR /app
 
