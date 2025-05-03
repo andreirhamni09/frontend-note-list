@@ -1,6 +1,6 @@
 # Tahap 1: Build
 # Gunakan base image Node.js resmi
-FROM node:18-alpine
+FROM node:lts
 
 WORKDIR /app
 
