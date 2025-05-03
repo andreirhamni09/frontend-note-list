@@ -3,7 +3,7 @@ services:
     build:
       context: ./frontend
       dockerfile: frontend/Dockerfile
-    container_name: frontend
+    container_name: frontend-note-list
     ports:
       - "3000:3000"
     networks:

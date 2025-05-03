@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/andreirhamni09/aplikasi-note-list.git'
+        git 'https://github.com/andreirhamni09/frontend-note-list.git'
       }
     }
 
