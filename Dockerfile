@@ -1,5 +1,6 @@
 # Tahap 1: Build
-FROM node:18-alpine AS builder
+# Gunakan base image Node.js resmi
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -10,7 +11,7 @@ COPY . .
 RUN yarn build
 
 # Tahap 2: Produksi
-FROM node:18-alpine AS production
+# FROM node:18-alpine AS production
 
 WORKDIR /app
 
