@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend-note-list
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - .:/app
     environment:
