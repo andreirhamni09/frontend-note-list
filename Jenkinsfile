@@ -7,11 +7,12 @@ pipeline {
     }
 
     stages {
-        stage('Build and Start Docker') {
+
+        stage('Build & Run Docker') {
             steps {
-                bat 'docker-compose down --remove-orphans'
-                bat 'docker-compose build --no-cache'
-                bat 'docker-compose up -d'
+                script {
+                    bat 'docker-compose down -v --remove-orphans && docker-compose up --build'
+                }
             }
         }
 
