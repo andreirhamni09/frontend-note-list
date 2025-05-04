@@ -7,6 +7,15 @@ pipeline {
     }
 
     stages {
+        
+        stage('Build and Start Docker') {
+            steps {
+                bat 'docker-compose down --remove-orphans'
+                bat 'docker-compose build --no-cache'
+                bat 'docker-compose up -d'
+            }
+        }
+
 
         stage('Health Check') {
             steps {
@@ -22,15 +31,6 @@ pipeline {
                 '''
             }
         }
-        
-        stage('Build and Start Docker') {
-            steps {
-                bat 'docker-compose down --remove-orphans'
-                bat 'docker-compose build --no-cache'
-                bat 'docker-compose up -d'
-            }
-        }
-
         stage('Test') {
             steps {
                 bat 'docker exec frontend-note-list yarn test || exit 0'
