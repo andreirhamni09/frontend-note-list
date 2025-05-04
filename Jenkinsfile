@@ -38,9 +38,9 @@ pipeline {
         }
     }
 
-    // post {
-    //     always {
-    //         bat 'docker-compose down -v --remove-orphans'
-    //     }
-    // }
+    post {
+        always {
+            bat 'docker-compose down -v --remove-orphans'
+        }
+    }
 }
