@@ -5,11 +5,16 @@ pipeline {
     environment {
         COMPOSE_FILE = 'docker-compose.yml'
     }
+    stage('Checkout') {
+      steps {
+        git 'https://github.com/andreirhamni09/frontend-note-list.git'
+      }
+    }
 
     stages {
         stage('Build and Start Docker') {
             steps {
-                bat 'docker-compose down --remove-orphans'
+                bat 'docker-compose down -v --remove-orphans'
                 bat 'docker-compose build --no-cache'
                 bat 'docker-compose up -d'
             }
