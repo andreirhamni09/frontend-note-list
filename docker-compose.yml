@@ -6,11 +6,11 @@ services:
     image: frontend-image
     container_name: frontend-note-list
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - .:/app
       - /app/node_modules       # untuk menghindari node_modules tertimpa host
     environment:
       - NODE_ENV=development
     working_dir: /app
-    command: yarn dev --port 3000
+    command: yarn dev --port 3001
