@@ -46,16 +46,15 @@ export default function Dashboard() {
             </div>
             <div className="container-main">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {noteList?.length === 0 ? (
+                    {(noteList?.length === 0 || noteList == null)  ? (
                     <Card>
                         <CardHeader>
                             <CardTitle>{messages}</CardTitle>
-                        <CardDescription>{error}</CardDescription>
+                        <CardDescription></CardDescription>
                         </CardHeader>
-                        <CardFooter className="flex justify-between">
-                            <Button variant="outline">Cancel</Button>
-                            <Button>Tambah Note List</Button>
-                        </CardFooter>
+                        <CardContent className='flex flex-wrap justify-end'>
+                            {error}
+                        </CardContent>
                     </Card>
                     ):(
                         <>
