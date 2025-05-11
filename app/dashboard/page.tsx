@@ -46,7 +46,7 @@ export default function Dashboard() {
             </div>
             <div className="container-main">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {noteList.length === 0 ? (
+                    {noteList?.length === 0 ? (
                     <Card>
                         <CardHeader>
                             <CardTitle>{messages}</CardTitle>
