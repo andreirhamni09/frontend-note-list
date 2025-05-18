@@ -9,8 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from '../ui/button';
 
-export default function Page() {
+export default function AddNoteListForm() {
   return (
     <PageLayout>
         <div className="container">
@@ -39,12 +40,12 @@ export default function Page() {
                                 />
                             </div>
                             <div className="mb-6 flex items-center justify-center gap-2">
-                                <button type="submit" className="w-1/2 bg-cyan-500 text-white py-2 rounded hover:bg-cyan-800 flex items-center justify-center gap-1">
+                                <Button type="submit" className="w-1/2 bg-cyan-500 text-white py-2 rounded hover:bg-cyan-800 flex items-center justify-center gap-1">
                                     Back <ArrowBigLeft />
-                                </button>
-                                <button type="submit" className="w-1/2 bg-gray-500 text-white py-2 rounded hover:bg-gray-800 flex items-center justify-center gap-1">
+                                </Button>
+                                <Button type="submit" className="w-1/2 bg-gray-500 text-white py-2 rounded hover:bg-gray-800 flex items-center justify-center gap-1">
                                     Add <Plus />
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     </CardContent>

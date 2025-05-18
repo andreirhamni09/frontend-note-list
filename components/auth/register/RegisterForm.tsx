@@ -12,8 +12,7 @@ import { useState } from "react";
 import axios from "axios";
 import {ErrorData} from "@/response/auth/register/RegisterInterface";
 import { useRouter } from 'next/navigation';
-
-
+import { ArrowBigLeft, UserRoundPlus } from "lucide-react";
 
 export function RegisterForm({
   className,
@@ -30,16 +29,19 @@ export function RegisterForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ErrorData>();
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const LoginPages = () => {
+    router.push('/auth/login');
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
      try {
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const response = await axios.post('http://localhost:8000/api/Auth/register', {
         nama_user: form.nama_user,
         email_user: form.email_user,
         password_user: form.password_user,
@@ -111,9 +113,17 @@ export function RegisterForm({
                   <p className="text-sm text-red-500 mt-1">{error.password_user[0]}</p>
                 )}
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Registering...' : 'Register'}
-              </Button>
+               <div className="mb-6 flex items-center justify-center gap-2">
+                  <Button 
+                    type="submit" 
+                    className="w-1/2 bg-cyan-500 text-white py-2 rounded hover:bg-cyan-800 flex items-center justify-center gap-1"
+                    onClick={LoginPages}>
+                    <ArrowBigLeft /> Back 
+                  </Button>
+                  <Button type="submit" className="w-1/2 text-white py-2 rounded flex items-center justify-center gap-1" disabled={loading}>
+                    <UserRoundPlus />{loading ? 'Registering...' : 'Register'}
+                  </Button>
+              </div>
             </div>
           </form>
         </CardContent>
