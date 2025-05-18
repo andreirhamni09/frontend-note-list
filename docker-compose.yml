@@ -13,4 +13,3 @@ services:
     environment:
       - NODE_ENV=development
     working_dir: /app
-    command: yarn dev --port 3000

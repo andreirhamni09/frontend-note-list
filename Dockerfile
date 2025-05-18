@@ -18,6 +18,3 @@ RUN yarn build
 
 # Expose port Next.js
 EXPOSE 3000
-
-# Perintah untuk start Next.js app
-CMD ["yarn", "start"]
