@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     image: frontend-image
     container_name: frontend-note-list
+    restart: always
     ports:
       - "3000:3000"
     volumes:
@@ -13,3 +14,4 @@ services:
     environment:
       - NODE_ENV=development
     working_dir: /app
+    command: yarn dev --port 3000
