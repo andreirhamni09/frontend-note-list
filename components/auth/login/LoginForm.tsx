@@ -16,6 +16,12 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import AuthLayout from "../AuthLayout";
 import { LogIn, UserRoundPlus } from "lucide-react";
+import { LoginApi } from "@/api/auth/api";
+
+interface ErrorData {
+  email_user    : string,
+  password_user : string,
+}
 
 export function LoginForm({
   className,
@@ -29,8 +35,8 @@ export function LoginForm({
   });
 
   const [loading, setLoading]                         = useState(false);
-  const [errorMessages, setErrorMessages]             = useState();
-  const [loginErrorJson, setLoginErrorJson]           = useState<LoginErrorJson>();
+  const [errorMessages, setErrorMessages]             = useState("");
+  const [loginErrorJson, setLoginErrorJson]           = useState<ErrorData>();
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,33 +49,24 @@ export function LoginForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-     try {
-      const response = await axios.post('http://localhost:8000/api/Auth/login', {
-        email_user: form.email_user,
-        password_user: form.password_user,
-      });
-      
-      if(response.data.status === 200) {
-        Cookies.set('users', JSON.stringify(response.data.data));
-        router.push('/dashboard')
-      } else if (response.data.status === 204){ 
-        setErrorMessages(response.data.messages);
-      } else {
-        setLoginErrorJson(response.data.error);
+    const data    = {
+        email_user          : form.email_user,
+        password_user       : form.password_user
+    };
+    const res  = await LoginApi(data);
+    if(res.status === 200) {
+        Cookies.set('users', JSON.stringify(res.data));
+        router.push('/')
+    } else if(res.status === 422){
+        setLoginErrorJson(res.error)
         setForm(prev => ({
-          ...prev,
-          email_user: response.data.data?.email_user || '',
-          password_user: response.data.data?.password_user || ''
+            ...prev,
+            email_user          : res.data?.email_user      || '',
+            password_user       : res.data?.password_user   || ''
         }));
-      }
-    } catch (error:any) {
-      setErrorMessages(error.message);
-      setForm(prev => ({
-          ...prev,
-        email_user: form.email_user || '',
-        password_user: form.password_user || ''
-      }));
-    } finally {
+      setLoading(false);
+    } else if(res.status === 500) {
+      setErrorMessages(res.messages);
       setLoading(false);
     }
   };
@@ -123,7 +120,7 @@ export function LoginForm({
                         {loading ? 'Login...' : 'Login'}
                     </Button>
                     <Button 
-                      type="submit" 
+                      type="button" 
                       className="w-full py-2 rounded flex items-center justify-center gap-1" 
                       onClick={registerPages}>
                       <UserRoundPlus />

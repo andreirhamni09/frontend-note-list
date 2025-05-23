@@ -6,7 +6,9 @@ export function middleware(request: NextRequest) {
 
   const isAuthPage = pathname.startsWith('/auth');
   const isDashboardPage = pathname.startsWith('/dashboard');
+  const isNoteListPage = pathname.startsWith('/note_list');
   const isIndexPage = pathname === '/';
+
 
   // ✅ 1. Sudah login, tapi buka /auth -> redirect ke dashboard
   if (userCookie && isAuthPage) {
@@ -14,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   // ✅ 2. Belum login, tapi buka /dashboard atau / -> redirect ke login
-  if (!userCookie && (isDashboardPage || isIndexPage)) {
+  if (!userCookie && (isDashboardPage || isIndexPage || isNoteListPage)) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
@@ -27,5 +29,6 @@ export const config = {
     '/',
     '/auth/:path*',
     '/dashboard/:path*', 
+    '/note_list/:path*',
   ],
 };

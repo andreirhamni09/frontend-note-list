@@ -10,9 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
-import {ErrorData} from "@/response/auth/register/RegisterInterface";
+import { ErrorData } from "@/response/auth/register/RegisterInterface";
 import { useRouter } from 'next/navigation';
 import { ArrowBigLeft, UserRoundPlus } from "lucide-react";
+import { RegisterApi } from "@/api/auth/api";
 
 export function RegisterForm({
   className,
@@ -36,29 +37,30 @@ export function RegisterForm({
   const LoginPages = () => {
     router.push('/auth/login');
   }
+  const [apiErrorMessages, setApiErrorMessages]    = useState("");    
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-     try {
-      const response = await axios.post('http://localhost:8000/api/Auth/register', {
-        nama_user: form.nama_user,
-        email_user: form.email_user,
-        password_user: form.password_user,
-      });
-      setError(response.data.error);
-      const responseData = response.data.data;
-      if(response.data.status === 200) {
-        router.push('login');
-      } else if(response.data.status === 422) {
+    const data    = {
+        nama_user           : form.nama_user,
+        email_user          : form.email_user,
+        password_user       : form.password_user
+    };
+    const res  = await RegisterApi(data);
+    if(res.status === 200) {
+        router.push('/')
+    } else if(res.status === 422){
+        setError(res.error)
         setForm(prev => ({
-          ...prev,
-          email_user: responseData?.email_user || '',
-          nama_user: responseData?.nama_user || '',
-          password_user: responseData?.password_user || ''
+            ...prev,
+            nama_user           : res.data?.nama_user       || '',
+            email_user          : res.data?.email_user      || '',
+            password_user       : res.data?.password_user   || ''
         }));
-      } 
-    } finally {
+      setLoading(false);
+    } else if(res.status === 500) {
+      setApiErrorMessages(res.messages);
       setLoading(false);
     }
   };
@@ -115,7 +117,7 @@ export function RegisterForm({
               </div>
                <div className="mb-6 flex items-center justify-center gap-2">
                   <Button 
-                    type="submit" 
+                    type="button" 
                     className="w-1/2 bg-cyan-500 text-white py-2 rounded hover:bg-cyan-800 flex items-center justify-center gap-1"
                     onClick={LoginPages}>
                     <ArrowBigLeft /> Back 
@@ -125,6 +127,7 @@ export function RegisterForm({
                   </Button>
               </div>
             </div>
+            { apiErrorMessages && <p className="text-sm text-red-500 mt-1">{apiErrorMessages}</p> }
           </form>
         </CardContent>
       </Card>
