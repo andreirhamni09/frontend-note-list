@@ -16,7 +16,9 @@ pipeline {
         stage('Build & Run Docker') {
             steps {
                 script {
-                    bat 'docker-compose down -v --remove-orphans && docker-compose up -d --build'
+                    bat 'docker-compose down --volumes'
+                    bat 'docker-compose build --no-cache frontend'
+                    bat 'docker-compose up -d frontend'
                 }
             }
         }

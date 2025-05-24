@@ -15,7 +15,6 @@ COPY . .
 
 # Jalankan perintah build Next.js
 RUN yarn build
-RUN yarn add next
 
 # Expose port Next.js
 EXPOSE 3000
