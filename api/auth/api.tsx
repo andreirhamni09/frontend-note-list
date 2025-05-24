@@ -86,3 +86,41 @@ export async function LoginApi(data:any): Promise<Response<any>> {
         };
     }
 }
+
+export async function TokenExpired(): Promise<Response<any>> {    
+    
+    try {
+        const token     = users?.token      || "";
+        const body      = {
+            token          : token
+        }
+        const res = await axios.post(`${url}/Auth/tokenExpired`, body, {
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        return {
+            status: res.data.status,
+            messages: res.data.messages,
+            error: res.data.error,
+            data: res.data.data,
+        };
+    } catch (error:any) {
+        if (axios.isAxiosError(error) && error.response) {
+            return {
+                status: error.response.status,
+                messages: "Request failed",
+                error: error.message,
+                data: error.response.data,
+            };
+        }
+
+        // Tangani jika error tidak diketahui (network, dll)
+        return {
+            status: 500,
+            messages: "Internal error",
+            error: error?.message || "Unknown error",
+            data: [],
+        };
+    }
+}
