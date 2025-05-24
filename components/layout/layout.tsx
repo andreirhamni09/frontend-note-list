@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { isBefore, isAfter, parseISO } from "date-fns";
-import { TokenExpired } from "@/api/auth/api";
 
 
 const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -20,9 +19,8 @@ const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       }
 
       try {
-        const data      = await TokenExpired();
-        
-        const formattedDate = data.data.expired.replace(" ", "T");
+        const expired_str   = Cookies.get('users') ? JSON.parse(Cookies.get('users')!).expired : null;
+        const formattedDate = expired_str.replace(" ", "T");
 
         const expired = parseISO(formattedDate);
 
