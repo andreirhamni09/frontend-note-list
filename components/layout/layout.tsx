@@ -12,12 +12,6 @@ const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const check = async () => {
-      const token = Cookies.get('users') ? JSON.parse(Cookies.get('users')!).token : null;
-      if (!token) {
-        router.push('/auth/login');
-        return;
-      }
-
       try {
         const expired_str   = Cookies.get('users') ? JSON.parse(Cookies.get('users')!).expired : null;
         const formattedDate = expired_str.replace(" ", "T");
