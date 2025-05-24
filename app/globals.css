@@ -121,10 +121,3 @@
   }
 }
 /* Sembunyikan overlay debug Next.js */
-#__next-route-announcer {
-  display: none !important;
-}
-
-div[style*="position: fixed"][style*="bottom: 0px"] {
-  display: none !important;
-}
