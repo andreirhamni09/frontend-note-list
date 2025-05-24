@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { useRouter } from "next/navigation";
 import { useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { isBefore, isAfter, parseISO } from "date-fns";
 import { TokenExpired } from "@/api/auth/api";
 
 
@@ -20,12 +21,16 @@ const PageLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       try {
         const data      = await TokenExpired();
-        const expired   = new Date(data.data.expired);
+        
+        const formattedDate = data.data.expired.replace(" ", "T");
+
+        const expired = parseISO(formattedDate);
+
         const now = new Date();
-        if (expired < now) {
+        if (!isBefore(now, expired)) {
           Cookies.remove('users');
           router.push('/auth/login');
-        }
+        } 
       } catch (err) {
         console.error('Token check error:', err);
         Cookies.remove('users');
